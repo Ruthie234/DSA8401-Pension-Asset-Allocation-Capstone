@@ -1,0 +1,13 @@
+{
+  "project": "Analysing and Predicting Material Asset-Allocation Transitions among Retirement Benefits Schemes in Kenya",
+  "selected_model": "Gradient Boosting",
+  "decision_threshold": 0.5,
+  "material_change_threshold": 0.05,
+  "target_definition": "A material change is an absolute change of at least five percentage points in at least one individual asset-class share between consecutive reporting years.",
+  "test_outcome_years": [
+    2024,
+    2025
+  ],
+  "aggregation_note": "All dashboard datasets are aggregate summaries. No scheme reference identifiers or row-level scheme observations are exported. Asset shares are unweighted averages across schemes in each reporting year.",
+  "shap_note": "SHAP values describe the underlying base classifier before the separate sigmoid calibration layer. They are not causal effects or changes in calibrated probability."
+}

@@ -1,0 +1,17 @@
+[
+  {
+    "Validation_Outcome_Year": 2020,
+    "Fold_Training_Observations": 3393,
+    "Fold_Validation_Observations": 793
+  },
+  {
+    "Validation_Outcome_Year": 2021,
+    "Fold_Training_Observations": 4186,
+    "Fold_Validation_Observations": 799
+  },
+  {
+    "Validation_Outcome_Year": 2022,
+    "Fold_Training_Observations": 4985,
+    "Fold_Validation_Observations": 799
+  }
+]

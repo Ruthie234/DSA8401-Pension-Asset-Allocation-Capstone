@@ -1,0 +1,51 @@
+services:
+  pension-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pension-asset-allocation-api
+    ports:
+      - "8000:8000"
+    environment:
+      CAPSTONE_MODEL_PATH: /app/models/material_allocation_change_model.joblib
+      CAPSTONE_METADATA_PATH: /app/models/model_metadata.json
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+
+  pension-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pension-asset-allocation-dashboard
+    command:
+      - streamlit
+      - run
+      - dashboard/app.py
+      - --server.address=0.0.0.0
+      - --server.port=8501
+    ports:
+      - "8501:8501"
+    environment:
+      API_BASE_URL: http://pension-api:8000
+      DASHBOARD_DATA_DIR: /app/dashboard_data
+      RBA_DATA_PATH: /private_data/rba_source.csv
+      STREAMLIT_SERVER_HEADLESS: "true"
+      STREAMLIT_BROWSER_GATHER_USAGE_STATS: "false"
+    volumes:
+      - type: bind
+        source: "./COPY 1 FINAL.csv"
+        target: /private_data/rba_source.csv
+        read_only: true
+    depends_on:
+      pension-api:
+        condition: service_healthy
+    restart: unless-stopped

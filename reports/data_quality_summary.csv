@@ -1,0 +1,15 @@
+Measure,Count
+Raw source rows,16851
+Completely empty rows removed,1153
+Undated rows set aside,589
+Valid dated reports,15109
+Earlier scheme-year reports set aside,2082
+Annual scheme-year records,13027
+Rows with all mapped financial fields missing,52
+Rows with partially missing mapped financial fields,0
+Negative-investment scheme-years set aside,1
+Non-positive portfolios set aside,1772
+Positive-investment modelling observations,11202
+Schemes in modelling dataset,1147
+Negative-income observations retained,14
+Cash reconciliation mismatches (absolute difference > 1),1
