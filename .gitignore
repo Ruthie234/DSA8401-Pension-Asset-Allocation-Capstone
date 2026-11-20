@@ -25,3 +25,7 @@ COPY 1 FINAL.csv
 # Private historical and runtime data
 private_data/
 data/raw/
+# Include the capstone source dataset
+!data/
+data/*
+!data/COPY 1 FINAL.csv

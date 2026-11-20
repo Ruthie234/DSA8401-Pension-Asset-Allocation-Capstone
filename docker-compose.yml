@@ -42,7 +42,7 @@ services:
       STREAMLIT_BROWSER_GATHER_USAGE_STATS: "false"
     volumes:
       - type: bind
-        source: "./COPY 1 FINAL.csv"
+        source: ./data/COPY 1 FINAL.csv
         target: /private_data/rba_source.csv
         read_only: true
     depends_on:

@@ -36,7 +36,7 @@ from dashboard.assessment import build_assessment_features  # noqa: E402
 
 API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000").rstrip("/")
 RBA_DATA_PATH = Path(
-    os.getenv("RBA_DATA_PATH", str(PROJECT_ROOT / "COPY 1 FINAL.csv"))
+    os.getenv("RBA_DATA_PATH", str(PROJECT_ROOT / "data" / "COPY 1 FINAL.csv"))
 ).expanduser()
 
 ASSET_LABELS = {
