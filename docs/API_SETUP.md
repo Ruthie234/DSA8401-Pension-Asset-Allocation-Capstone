@@ -44,6 +44,10 @@ Open these addresses in a browser:
 
 Use the `POST /predict` endpoint in `/docs`. Submit one JSON object containing the 26 required predictor fields. The request schema is displayed by FastAPI in the documentation.
 
+**API input and smoke testing**
+
+The `POST /predict` endpoint expects a JSON object containing the 26 required predictor fields. Use the automatically generated Swagger interface at `/docs` to inspect the complete request schema and submit a test request. A smoke test confirms API connectivity and model invocation; it is not an independent evaluation of model performance. Do not invent or approximate values for a substantive prediction.
+
 ## 4. Request design
 
 The request must contain the 26 predictors listed in `models/model_metadata.json`. Do not send the target column, next-year asset shares, or any other future information.

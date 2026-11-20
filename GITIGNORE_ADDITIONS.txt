@@ -1,4 +1,0 @@
-# Add these lines to the project's existing .gitignore if the file currently ignores all CSVs:
-# Keep aggregate dashboard outputs only; do not unignore the raw source or row-level files.
-!dashboard_data/
-!dashboard_data/*.csv

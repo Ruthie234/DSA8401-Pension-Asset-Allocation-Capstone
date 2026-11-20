@@ -72,54 +72,9 @@ flowchart TD
 - `dashboard_data/`: aggregate dashboard exports; this directory must not contain scheme identifiers or row-level scheme records.
 - `tests/`: automated tests for core processing and interactive assessment feature construction.
 
-## 4. Repository structure
-
-The project repository is organised approximately as follows:
-
-```text
-AML CAPSTONE PROJECT/
-├── README.md
-├── AI_USE.md
-├── Pension_Asset_Allocation_Capstone.ipynb
-├── api/
-│   ├── __init__.py
-│   ├── main.py
-│   └── schemas.py
-├── dashboard/
-│   ├── __init__.py
-│   ├── app.py
-│   └── assessment.py
-├── dashboard_data/                 # Aggregate exports only; generated locally
-├── models/                         # Generated model and metadata
-├── reports/                        # Aggregate evaluation reports
-├── scripts/
-│   ├── build_dashboard_data.py
-│   ├── predict.py
-│   └── run_training.py
-├── src/
-│   └── pension_capstone/
-│       ├── __init__.py
-│       ├── config.py
-│       ├── data_pipeline.py
-│       ├── feature_engineering.py
-│       ├── modeling.py
-│       └── interpretability.py
-├── tests/
-│   ├── test_core.py
-│   └── test_interactive_assessment.py
-├── requirements.txt
-├── api_requirements.txt
-├── requirements-dashboard.txt
-├── requirements-docker.txt
-├── Dockerfile
-├── docker-compose.yml
-├── .dockerignore
-└── .gitignore
-```
-
 Generated files may be present inside `models/`, `reports/` and `dashboard_data/`. The raw RBA CSV is a local runtime dependency and is deliberately not part of the public repository.
 
-## 5. Data source and privacy
+## 4. Data source and privacy
 
 The project uses anonymised scheme-level investment records obtained from the Retirement Benefits Authority (RBA), covering reporting years 2013–2025. The raw source file used locally is named:
 
@@ -131,7 +86,7 @@ For the Docker deployment, `docker-compose.yml` mounts the root-level `COPY 1 FI
 
 Do not commit the raw CSV, scheme-level extracts, credentials, or other restricted material. Check the relevant RBA data-use agreement and university requirements before publicly distributing any model artifact or derived output. Permission to share a trained model is separate from permission to share the raw dataset.
 
-## 6. Environment and dependencies
+## 5. Environment and dependencies
 
 The project was developed and tested with Python 3.13. The Docker image uses `python:3.13-slim`.
 
@@ -154,11 +109,11 @@ python -m pip install -r api_requirements.txt
 python -m pip install -r requirements-dashboard.txt
 ```
 
-## 7. Reproduce the machine-learning pipeline
+## 6. Reproduce the machine-learning pipeline
 
 Run commands from the project root, which contains `scripts/`, `src/`, `models/` and `reports/`.
 
-### 7.1 Train and evaluate the model
+### 6.1 Train and evaluate the model
 
 If `COPY 1 FINAL.csv` is in the project root:
 
@@ -192,7 +147,7 @@ To skip the optional SHAP analysis:
 python scripts/run_training.py --data "COPY 1 FINAL.csv" --skip-shap
 ```
 
-### 7.2 Temporal model-development design
+### 6.2 Temporal model-development design
 
 - Expanding-window validation folds use outcome years 2020, 2021 and 2022.
 - Candidate models are Logistic Regression, Random Forest and Gradient Boosting.
@@ -204,7 +159,7 @@ python scripts/run_training.py --data "COPY 1 FINAL.csv" --skip-shap
 
 The temporal design allows the same scheme to appear in more than one year. Evaluation therefore concerns prediction for future years among schemes with historical records; it is not an evaluation of generalisation to entirely unseen schemes.
 
-### 7.3 Generate aggregate dashboard data
+### 6.3 Generate aggregate dashboard data
 
 After the training pipeline has generated the model artifacts, run:
 
@@ -214,7 +169,7 @@ python scripts/build_dashboard_data.py --data "COPY 1 FINAL.csv"
 
 The script writes aggregate summaries to `dashboard_data/`, including allocation trends, concentration/diversification, observed transitions, held-out prediction summaries, SHAP feature importance and data-quality summaries. The export checks exclude scheme reference identifiers and row-level scheme records.
 
-### 7.4 Run automated tests
+### 6.4 Run automated tests
 
 Install pytest if it is not already available:
 
@@ -228,9 +183,9 @@ Run the complete test suite:
 python -m pytest tests -q
 ```
 
-## 8. Run the application with Docker Compose
+## 7. Run the application with Docker Compose
 
-### 8.1 Confirm local runtime files
+### 7.1 Confirm local runtime files
 
 Before building the containers, ensure that the project root contains the authorised local file `COPY 1 FINAL.csv` and that the following model artifacts exist:
 
@@ -241,7 +196,7 @@ models/model_metadata.json
 
 If the model artifacts do not exist, run the training pipeline in Section 7.1 first. The raw CSV must remain local and must not be added to the public repository.
 
-### 8.2 Build and start both services
+### 7.2 Build and start both services
 
 From the project root:
 
@@ -257,7 +212,7 @@ docker compose ps
 
 The API container should report `healthy`; the dashboard container should report `running`.
 
-### 8.3 Open the services
+### 7.3 Open the services
 
 - **Portfolio monitoring and early-warning dashboard:** <http://localhost:8501>
 - **FastAPI landing page:** <http://localhost:8000/>
@@ -278,7 +233,7 @@ docker compose down
 
 Docker Desktop must be running. Signing into Docker Hub is not required to build and run this project locally.
 
-## 9. Use the interactive portfolio assessment
+## 8. Use the interactive portfolio assessment
 
 1. Open <http://localhost:8501>.
 2. Select an anonymised scheme reference and the current reporting year.
@@ -293,7 +248,7 @@ The dashboard calculates the model's 26 predictor features automatically. The us
 
 The displayed previous-year amounts are retrieved from the selected scheme's historical record. The current-year amounts are supplied or confirmed by the user; they should represent the scheme's actual current reporting-year values. Hypothetical amounts may be used for software testing only and must not be presented as actual RBA observations.
 
-## 10. API service
+## 9. API service
 
 The FastAPI service loads the calibrated model and metadata generated by `scripts/run_training.py`.
 
@@ -309,7 +264,7 @@ The API request must contain the exact predictor fields defined in `models/model
 
 The response includes the selected model, calibrated probability, binary prediction, decision threshold and interpretation information. The interactive dashboard displays the probability and classification but does not display per-observation SHAP explanations.
 
-## 11. Command-line prediction
+## 10. Command-line prediction
 
 For a separate command-line prediction, prepare a CSV with one row per scheme-year and the exact 26 predictor columns listed in `models/model_metadata.json`. The values must be calculated only from information available at the prediction date. Do not include `Ref`, target columns, next-year columns or future information.
 
@@ -321,7 +276,7 @@ python scripts/predict.py --input "new_scheme_year_features.csv" --output "predi
 
 The output contains the predicted probability of material allocation change, predicted class at the 0.50 threshold and the decision threshold used.
 
-## 12. Model outputs and evaluation reports
+## 11. Model outputs and evaluation reports
 
 The training pipeline generates the following artifacts.
 
@@ -344,7 +299,7 @@ The training pipeline generates the following artifacts.
 
 The aggregate dashboard data builder generates its own summaries under `dashboard_data/`. These are aggregate exports and must not contain scheme reference identifiers or scheme-level row records.
 
-## 13. Interpretation, limitations and responsible use
+## 12. Interpretation, limitations and responsible use
 
 - The model estimates whether at least one individual asset-class share will change by an absolute five percentage points or more between consecutive reporting years.
 - It predicts a binary outcome and its probability; it does not forecast future investment amounts or asset-class shares.
@@ -356,7 +311,7 @@ The aggregate dashboard data builder generates its own summaries under `dashboar
 - The system is a research prototype for portfolio monitoring and decision support, not a live regulatory decision system or a substitute for professional assessment.
 - Historical retrieval depends on a valid consecutive-year record for the selected anonymised scheme.
 
-## 14. Public repository and artifact-sharing precautions
+## 13. Public repository and artifact-sharing precautions
 
 Before making the GitHub repository public:
 
@@ -368,7 +323,7 @@ Before making the GitHub repository public:
 
 The raw RBA dataset is intentionally accessed locally and is mounted read-only for dashboard use. It must not be copied into the Docker image or uploaded to a public repository.
 
-## 15. Main source modules
+## 14. Main source modules
 
 - `src/pension_capstone/config.py`: shared project settings, target threshold, temporal periods and source-column configuration.
 - `src/pension_capstone/data_pipeline.py`: data ingestion, cleaning, annualisation and financial quality checks.
